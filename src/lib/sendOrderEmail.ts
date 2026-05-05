@@ -35,7 +35,7 @@ export async function sendOrderEmail(
             <span style="vertical-align:middle;font-weight:500;">${item.name}${item.weight ? ` <span style="color:#999;font-size:12px;">(${item.weight})</span>` : ''}</span>
           </td>
           <td style="padding:10px 12px;border-bottom:1px solid #f0f0f0;text-align:center;">${item.quantity}</td>
-          <td style="padding:10px 12px;border-bottom:1px solid #f0f0f0;text-align:right;font-weight:600;color:#8B1538;">${Math.round(item.price * item.quantity).toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g, '.')} RSD</td>
+          <td style="padding:10px 12px;border-bottom:1px solid #f0f0f0;text-align:right;font-weight:600;color:#8B1538;">${Math.round(item.price * item.quantity).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} RSD</td>
         </tr>`,
     )
     .join('')

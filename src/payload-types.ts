@@ -219,6 +219,8 @@ export interface Page {
     | ProductsGridBlock
     | PromiseBlock
     | TrustStatsBlock
+    | FullWidthImageBlock
+    | PartnersCarouselBlock
   )[];
   meta?: {
     title?: string | null;
@@ -683,8 +685,15 @@ export interface Product {
    */
   generateSlug?: boolean | null;
   slug: string;
-  description: string;
+  description?: string | null;
   price: number;
+  sizes?:
+    | {
+        label: string;
+        price: number;
+        id?: string | null;
+      }[]
+    | null;
   status: 'in-stock' | 'out-of-stock' | 'pre-order';
   images: {
     image: number | Media;
@@ -760,6 +769,36 @@ export interface TrustStatsBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'trustStats';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FullWidthImageBlock".
+ */
+export interface FullWidthImageBlock {
+  image: number | Media;
+  caption?: string | null;
+  maxHeight?: ('400' | '600' | '800' | 'full') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'fullWidthImage';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PartnersCarouselBlock".
+ */
+export interface PartnersCarouselBlock {
+  label?: string | null;
+  heading?: string | null;
+  speed?: ('50' | '30' | '15') | null;
+  partners: {
+    logo: number | Media;
+    name?: string | null;
+    url?: string | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'partnersCarousel';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1083,6 +1122,8 @@ export interface PagesSelect<T extends boolean = true> {
         productsGrid?: T | ProductsGridBlockSelect<T>;
         promise?: T | PromiseBlockSelect<T>;
         trustStats?: T | TrustStatsBlockSelect<T>;
+        fullWidthImage?: T | FullWidthImageBlockSelect<T>;
+        partnersCarousel?: T | PartnersCarouselBlockSelect<T>;
       };
   meta?:
     | T
@@ -1406,6 +1447,36 @@ export interface TrustStatsBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FullWidthImageBlock_select".
+ */
+export interface FullWidthImageBlockSelect<T extends boolean = true> {
+  image?: T;
+  caption?: T;
+  maxHeight?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PartnersCarouselBlock_select".
+ */
+export interface PartnersCarouselBlockSelect<T extends boolean = true> {
+  label?: T;
+  heading?: T;
+  speed?: T;
+  partners?:
+    | T
+    | {
+        logo?: T;
+        name?: T;
+        url?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
@@ -1541,6 +1612,13 @@ export interface ProductsSelect<T extends boolean = true> {
   slug?: T;
   description?: T;
   price?: T;
+  sizes?:
+    | T
+    | {
+        label?: T;
+        price?: T;
+        id?: T;
+      };
   status?: T;
   images?:
     | T
