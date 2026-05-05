@@ -22,6 +22,7 @@ import { PromiseBlockComponent } from '@/blocks/Promise/Component'
 import { TrustStatsBlockComponent } from '@/blocks/TrustStats/Component'
 import { FullWidthImageBlock } from '@/blocks/FullWidthImage/Component'
 import { PartnersCarouselBlock } from '@/blocks/PartnersCarousel/Component'
+import { PriceMenuBlock } from '@/blocks/PriceMenu/Component'
 
 /*==================================================================
     BLOCK MAP — slug → component
@@ -45,6 +46,7 @@ const blockComponents = {
   trustStats: TrustStatsBlockComponent,
   fullWidthImage: FullWidthImageBlock,
   partnersCarousel: PartnersCarouselBlock,
+  priceMenu: PriceMenuBlock,
 }
 
 /*==================================================================
@@ -52,7 +54,10 @@ const blockComponents = {
     Maps the page layout array to block components in order.
     Some blocks have layout-specific wrappers (dividers, offsets).
 ==================================================================*/
-export const RenderBlocks: React.FC<{ blocks: Page['layout'][0][] }> = ({ blocks }) => {
+export const RenderBlocks: React.FC<{ blocks: Page['layout'][0][]; locale?: string }> = ({
+  blocks,
+  locale,
+}) => {
   if (!blocks?.length) return null
 
   return (
@@ -66,7 +71,7 @@ export const RenderBlocks: React.FC<{ blocks: Page['layout'][0][] }> = ({ blocks
 
         // Full-bleed cart page — no wrapper
         if (blockType === 'cart') {
-          return <Block key={index} {...(block as any)} disableInnerContainer />
+          return <Block key={index} {...(block as any)} locale={locale} disableInnerContainer />
         }
 
         // About block gets a top divider line in brand color
@@ -76,7 +81,7 @@ export const RenderBlocks: React.FC<{ blocks: Page['layout'][0][] }> = ({ blocks
               <div style={{ paddingLeft: '1rem', paddingRight: '1rem' }}>
                 <div style={{ height: '1px', backgroundColor: '#8B1538', maxWidth: '80rem', marginLeft: 'auto', marginRight: 'auto' }} />
               </div>
-              <Block {...(block as any)} disableInnerContainer />
+              <Block {...(block as any)} locale={locale} disableInnerContainer />
             </div>
           )
         }
@@ -85,14 +90,14 @@ export const RenderBlocks: React.FC<{ blocks: Page['layout'][0][] }> = ({ blocks
         if (blockType === 'farmSteps') {
           return (
             <div key={index} style={{ marginTop: '-1px' }}>
-              <Block {...(block as any)} disableInnerContainer />
+              <Block {...(block as any)} locale={locale} disableInnerContainer />
             </div>
           )
         }
 
         return (
           <div key={index}>
-            <Block {...(block as any)} disableInnerContainer />
+            <Block {...(block as any)} locale={locale} disableInnerContainer />
           </div>
         )
       })}

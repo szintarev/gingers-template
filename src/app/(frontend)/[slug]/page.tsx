@@ -5,6 +5,7 @@ import configPromise from '@payload-config'
 import { getPayload, type RequiredDataFromCollectionSlug } from 'payload'
 import { draftMode } from 'next/headers'
 import { unstable_cache } from 'next/cache'
+import { notFound } from 'next/navigation'
 import React, { cache } from 'react'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'
@@ -90,7 +91,7 @@ export default async function Page({ params: paramsPromise, searchParams: search
       {draft && <LivePreviewListener />}
 
       <RenderHero {...hero} />
-      <RenderBlocks blocks={layout} />
+      <RenderBlocks blocks={layout} locale={locale} />
     </article>
   )
 }
@@ -119,6 +120,10 @@ async function fetchPageBySlug(slug: string, draft: boolean, locale: Locale) {
     collection: 'pages',
     draft,
     locale,
+    // Our content is authored primarily in Serbian. If a translation is missing
+    // for the requested locale, fall back to Serbian so blocks like PriceMenu
+    // don't render empty fields.
+    fallbackLocale: 'sr',
     limit: 1,
     pagination: false,
     overrideAccess: draft,

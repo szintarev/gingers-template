@@ -221,6 +221,7 @@ export interface Page {
     | TrustStatsBlock
     | FullWidthImageBlock
     | PartnersCarouselBlock
+    | PriceMenuBlock
   )[];
   meta?: {
     title?: string | null;
@@ -802,6 +803,41 @@ export interface PartnersCarouselBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PriceMenuBlock".
+ */
+export interface PriceMenuBlock {
+  headingTop: string;
+  brandTitle: string;
+  brandSubtitle: string;
+  headingMenu: string;
+  items_en: {
+    label: string;
+    price: string;
+    id?: string | null;
+  }[];
+  items_sr: {
+    label: string;
+    price: string;
+    id?: string | null;
+  }[];
+  items_hu: {
+    label: string;
+    price: string;
+    id?: string | null;
+  }[];
+  items_ru: {
+    label: string;
+    price: string;
+    id?: string | null;
+  }[];
+  footerLeft: string;
+  footerRight: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'priceMenu';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -1124,6 +1160,7 @@ export interface PagesSelect<T extends boolean = true> {
         trustStats?: T | TrustStatsBlockSelect<T>;
         fullWidthImage?: T | FullWidthImageBlockSelect<T>;
         partnersCarousel?: T | PartnersCarouselBlockSelect<T>;
+        priceMenu?: T | PriceMenuBlockSelect<T>;
       };
   meta?:
     | T
@@ -1472,6 +1509,48 @@ export interface PartnersCarouselBlockSelect<T extends boolean = true> {
         url?: T;
         id?: T;
       };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PriceMenuBlock_select".
+ */
+export interface PriceMenuBlockSelect<T extends boolean = true> {
+  headingTop?: T;
+  brandTitle?: T;
+  brandSubtitle?: T;
+  headingMenu?: T;
+  items_en?:
+    | T
+    | {
+        label?: T;
+        price?: T;
+        id?: T;
+      };
+  items_sr?:
+    | T
+    | {
+        label?: T;
+        price?: T;
+        id?: T;
+      };
+  items_hu?:
+    | T
+    | {
+        label?: T;
+        price?: T;
+        id?: T;
+      };
+  items_ru?:
+    | T
+    | {
+        label?: T;
+        price?: T;
+        id?: T;
+      };
+  footerLeft?: T;
+  footerRight?: T;
   id?: T;
   blockName?: T;
 }
