@@ -50,6 +50,11 @@ export const ProductsGridBlockComponent: React.FC<ProductsGridBlockProps & { loc
                   : null
               const imageUrl = imageObj && 'url' in imageObj ? (imageObj.url ?? null) : null
 
+              const sizes = ((product as any).sizes ?? []).map((s: any) => ({
+                label: s.label as string,
+                price: s.price as number,
+              })).filter((s: any) => s.label && typeof s.price === 'number')
+
               return (
                 <ProductCard
                   key={product.id}
@@ -60,6 +65,7 @@ export const ProductsGridBlockComponent: React.FC<ProductsGridBlockProps & { loc
                   imageUrl={imageUrl}
                   status={product.status}
                   slug={product.slug ?? ''}
+                  sizes={sizes}
                 />
               )
             })}

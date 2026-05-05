@@ -20,6 +20,8 @@ import { SingleProductBlockComponent } from '@/blocks/SingleProduct/Component'
 import { ProductsGridBlockComponent } from '@/blocks/ProductsGrid/Component'
 import { PromiseBlockComponent } from '@/blocks/Promise/Component'
 import { TrustStatsBlockComponent } from '@/blocks/TrustStats/Component'
+import { FullWidthImageBlock } from '@/blocks/FullWidthImage/Component'
+import { PartnersCarouselBlock } from '@/blocks/PartnersCarousel/Component'
 
 /*==================================================================
     BLOCK MAP — slug → component
@@ -41,6 +43,8 @@ const blockComponents = {
   productsGrid: ProductsGridBlockComponent,
   promise: PromiseBlockComponent,
   trustStats: TrustStatsBlockComponent,
+  fullWidthImage: FullWidthImageBlock,
+  partnersCarousel: PartnersCarouselBlock,
 }
 
 /*==================================================================

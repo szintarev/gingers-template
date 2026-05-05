@@ -8,14 +8,13 @@ import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
 type OnApproveData = { orderID: string; payerID?: string | null; paymentID?: string | null }
 import { useCart, type ShippingInfo } from '@/contexts/CartContext'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { formatPrice } from '@/lib/formatPrice'
 import { COUNTRIES } from '@/lib/countries'
 import { sendOrderEmail } from '@/lib/sendOrderEmail'
 
 /*==================================================================
     CONSTANTS
 ==================================================================*/
-const CURRENCY = '€'
-
 const EMPTY_SHIPPING: ShippingInfo = {
   firstName: '', lastName: '', email: '', phone: '',
   address: '', city: '', postalCode: '', country: '', state: '', notes: '',
@@ -248,7 +247,7 @@ export function CartDrawer() {
                 <div className="border-t border-gray-100 px-6 py-5 space-y-4 flex-shrink-0">
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-500">{t('total')}</span>
-                    <span className="text-lg font-bold text-gray-900 tabular-nums">{CURRENCY}{getTotalPrice().toFixed(2)}</span>
+                    <span className="text-lg font-bold text-gray-900 tabular-nums">{formatPrice(getTotalPrice())}</span>
                   </div>
                   {step === 'cart' && (
                     <button onClick={() => setStep('shipping')} className="w-full bg-[#8B1538] hover:bg-[#6B0F2B] text-white py-3 rounded-xl text-sm font-medium flex items-center justify-center gap-1.5 transition-colors">
@@ -320,7 +319,7 @@ function CartStep({
                     <PlusIcon />
                   </button>
                 </div>
-                <p className="text-sm font-semibold text-[#8B1538] tabular-nums">{CURRENCY}{(item.price * item.quantity).toFixed(2)}</p>
+                <p className="text-sm font-semibold text-[#8B1538] tabular-nums">{formatPrice(item.price * item.quantity)}</p>
               </div>
             </div>
           </li>
@@ -405,7 +404,7 @@ function PaymentStep({
       {/* Order total */}
       <div className="bg-gray-50 rounded-xl p-4 flex items-center justify-between">
         <span className="text-sm text-gray-500">{t('total')}</span>
-        <span className="text-lg font-bold text-gray-900 tabular-nums">{CURRENCY}{getTotalPrice().toFixed(2)}</span>
+        <span className="text-lg font-bold text-gray-900 tabular-nums">{formatPrice(getTotalPrice())}</span>
       </div>
 
       {/* PayPal buttons or processing overlay */}

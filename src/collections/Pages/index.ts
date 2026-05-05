@@ -18,6 +18,8 @@ import { SingleProductBlock } from '../../blocks/SingleProduct/config'
 import { ProductsGridBlock } from '../../blocks/ProductsGrid/config'
 import { PromiseBlock } from '../../blocks/Promise/config'
 import { TrustStatsBlock } from '../../blocks/TrustStats/config'
+import { FullWidthImage } from '../../blocks/FullWidthImage/config'
+import { PartnersCarousel } from '../../blocks/PartnersCarousel/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -81,7 +83,7 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Process, FarmSteps, Testimonials, Stats, About, Features, ImageCarousel, Hero, Partnership, ProductsBlock, CartBlock, SingleProductBlock, ProductsGridBlock, PromiseBlock, TrustStatsBlock],
+              blocks: [CallToAction, Process, FarmSteps, Testimonials, Stats, About, Features, ImageCarousel, Hero, Partnership, ProductsBlock, CartBlock, SingleProductBlock, ProductsGridBlock, PromiseBlock, TrustStatsBlock, FullWidthImage, PartnersCarousel],
               required: true,
               admin: {
                 initCollapsed: true,

@@ -37,6 +37,11 @@ export const SingleProductBlockComponent: React.FC<
       : null
   }).filter(Boolean) as string[]
 
+  const sizes = ((data as any).sizes ?? []).map((s: any) => ({
+    label: s.label as string,
+    price: s.price as number,
+  })).filter((s: any) => s.label && typeof s.price === 'number')
+
   return (
     <SingleProductDetail
       id={data.id}
@@ -52,6 +57,7 @@ export const SingleProductBlockComponent: React.FC<
         label: n.label ?? '',
         value: n.value ?? '',
       }))}
+      sizes={sizes}
     />
   )
 }

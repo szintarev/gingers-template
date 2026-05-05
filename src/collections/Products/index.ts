@@ -20,13 +20,22 @@ export const Products: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'price', 'status', 'updatedAt'],
+    defaultColumns: ['title', 'price', 'status', 'description', 'updatedAt'],
   },
   fields: [
     { name: 'title', type: 'text', required: true },
     slugField({ fieldToUse: 'title' }),
-    { name: 'description', type: 'textarea', localized: true, required: true },
-    { name: 'price', type: 'number', required: true, min: 0 },
+    { name: 'description', type: 'textarea', localized: true },
+    { name: 'price', type: 'number', label: 'Base price (RSD)', required: true, min: 0 },
+    {
+      name: 'sizes',
+      type: 'array',
+      label: 'Sizes & Prices',
+      fields: [
+        { name: 'label', type: 'text', label: 'Size label (e.g. 100g, 250g)', required: true },
+        { name: 'price', type: 'number', label: 'Price (RSD)', required: true, min: 0 },
+      ],
+    },
     {
       name: 'status',
       type: 'select',

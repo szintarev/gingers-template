@@ -7,7 +7,9 @@ import Link from 'next/link'
 import type { Header } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { toast } from 'sonner'
 import { useCart } from '@/contexts/CartContext'
+import { formatPrice } from '@/lib/formatPrice'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 interface HeaderClientProps {
@@ -25,6 +27,9 @@ interface SearchResult {
 export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   const navItems = data?.navItems || []
   const { getTotalItems, openCart } = useCart()
+  function handleCartClick() {
+    toast.info(t('shopInDevelopment'), { description: t('shopInDevelopmentDesc') })
+  }
   const { t } = useLanguage()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
@@ -93,7 +98,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
             </nav>
             <div className="px-6 py-6 border-t border-gray-100 flex-shrink-0 flex items-center justify-between">
               <LanguageSwitcher />
-              <button onClick={() => { openCart(); setIsMenuOpen(false) }} className="relative flex items-center gap-2 text-sm text-gray-600 hover:text-[#8B1538] transition-colors">
+              <button onClick={() => { handleCartClick(); setIsMenuOpen(false) }} className="relative flex items-center gap-2 text-sm text-gray-600 hover:text-[#8B1538] transition-colors">
                 <ShoppingCart className="w-5 h-5" />
                 {getTotalItems() > 0 && (
                   <span className="w-5 h-5 flex items-center justify-center bg-[#8B1538] text-white text-xs rounded-full">{getTotalItems()}</span>
@@ -180,7 +185,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
                                 <p className="text-sm font-medium text-gray-900 truncate group-hover:text-[#8B1538] transition-colors">{product.title}</p>
                               </div>
                               <div className="flex items-center gap-2 flex-shrink-0">
-                                <span className="text-sm font-semibold text-[#8B1538]">€{product.price?.toFixed(2)}</span>
+                                <span className="text-sm font-semibold text-[#8B1538]">{formatPrice(product.price ?? 0)}</span>
                                 <ArrowRight className="w-3.5 h-3.5 text-gray-300 group-hover:text-[#8B1538] transition-colors" />
                               </div>
                             </Link>
@@ -234,7 +239,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
 
               <motion.button
                 whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                onClick={openCart}
+                onClick={handleCartClick}
                 className={`relative flex items-center justify-center w-9 h-9 rounded-md transition-colors ${interactiveItemClass}`}
                 aria-label="Cart"
               >

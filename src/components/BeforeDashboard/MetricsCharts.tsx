@@ -69,10 +69,10 @@ export default function MetricsCharts({ data }: { data: MetricsData }) {
   }
 
   const revenueOverTime: echarts.EChartsOption = {
-    tooltip: { trigger: 'axis', valueFormatter: (v: unknown) => `€${Number(v).toFixed(2)}` },
+    tooltip: { trigger: 'axis', valueFormatter: (v: unknown) => `${Math.round(Number(v))} RSD` },
     grid: { left: 56, right: 16, top: 16, bottom: 40 },
     xAxis: { type: 'category', data: dates, axisLabel: { fontSize: 11 } },
-    yAxis: { type: 'value', axisLabel: { formatter: (v: number) => `€${v}` } },
+    yAxis: { type: 'value', axisLabel: { formatter: (v: number) => `${Math.round(v)} RSD` } },
     series: [{
       name: 'Prihod', type: 'line', smooth: true, data: dailyOrders.map((d) => d.revenue),
       areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(139,21,56,0.25)' }, { offset: 1, color: 'rgba(139,21,56,0)' }] } },
@@ -95,14 +95,14 @@ export default function MetricsCharts({ data }: { data: MetricsData }) {
   }
 
   const topProductsChart: echarts.EChartsOption = {
-    tooltip: { trigger: 'axis', valueFormatter: (v: unknown) => `€${Number(v).toFixed(2)}` },
+    tooltip: { trigger: 'axis', valueFormatter: (v: unknown) => `${Math.round(Number(v))} RSD` },
     grid: { left: 140, right: 16, top: 8, bottom: 32 },
-    xAxis: { type: 'value', axisLabel: { formatter: (v: number) => `€${v}` } },
+    xAxis: { type: 'value', axisLabel: { formatter: (v: number) => `${Math.round(v)} RSD` } },
     yAxis: { type: 'category', data: topProducts.map((p) => p.name).reverse(), axisLabel: { fontSize: 11, width: 120, overflow: 'truncate' } },
     series: [{
       name: 'Prihod', type: 'bar', data: topProducts.map((p) => p.revenue).reverse(),
       itemStyle: { color: '#8B1538', borderRadius: [0, 4, 4, 0] },
-      label: { show: true, position: 'right', formatter: (p: unknown) => `€${Number((p as { value: number }).value).toFixed(0)}`, fontSize: 11 },
+      label: { show: true, position: 'right', formatter: (p: unknown) => `${Math.round(Number((p as { value: number }).value))} RSD`, fontSize: 11 },
     }],
   }
 
@@ -133,8 +133,8 @@ export default function MetricsCharts({ data }: { data: MetricsData }) {
 
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
         {card('Ukupno porudžbina', String(kpis.totalOrders))}
-        {card('Ukupan prihod', `€${kpis.totalRevenue.toFixed(2)}`)}
-        {card('Prosečna vrednost', `€${kpis.avgOrderValue.toFixed(2)}`)}
+        {card('Ukupan prihod', `${Math.round(kpis.totalRevenue).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} RSD`)}
+        {card('Prosečna vrednost', `${Math.round(kpis.avgOrderValue).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} RSD`)}
         {card('Ovaj mesec', String(kpis.ordersThisMonth), 'porudžbina')}
       </div>
 

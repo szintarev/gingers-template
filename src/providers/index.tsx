@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import { Toaster } from 'sonner'
 import { HeaderThemeProvider } from './HeaderTheme'
 import { ThemeProvider } from './Theme'
 import { CartProvider } from '@/contexts/CartContext'
@@ -20,6 +21,7 @@ export const Providers: React.FC<{ children: React.ReactNode }> = ({ children })
         <LanguageProvider>
           <CartProvider>
             <CartDrawer />
+            <Toaster position="bottom-center" richColors />
             {children}
           </CartProvider>
         </LanguageProvider>

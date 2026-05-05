@@ -8,10 +8,9 @@ import {
 import Link from 'next/link'
 import { useCart, type ShippingInfo } from '@/contexts/CartContext'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { formatPrice } from '@/lib/formatPrice'
 import { COUNTRIES } from '@/lib/countries'
 import { sendOrderEmail } from '@/lib/sendOrderEmail'
-
-const CURRENCY = '€'
 
 const EMPTY_SHIPPING: ShippingInfo = {
   firstName: '', lastName: '', email: '', phone: '',
@@ -186,8 +185,8 @@ export function CartBlockComponent() {
                           </div>
                         </div>
                         <div className="text-right flex-shrink-0">
-                          <p className="font-bold text-gray-900">{CURRENCY}{(item.price * item.quantity).toFixed(2)}</p>
-                          <p className="text-xs text-gray-400 mt-0.5">{CURRENCY}{item.price.toFixed(2)} {t('each')}</p>
+                          <p className="font-bold text-gray-900">{formatPrice(item.price * item.quantity)}</p>
+                          <p className="text-xs text-gray-400 mt-0.5">{formatPrice(item.price)} {t('each')}</p>
                         </div>
                       </div>
                     ))}
@@ -251,16 +250,16 @@ export function CartBlockComponent() {
                   {cart.map((item) => (
                     <div key={item.id} className="flex justify-between text-sm text-gray-600">
                       <span className="truncate mr-2">{item.name} <span className="text-gray-400">×{item.quantity}</span></span>
-                      <span className="flex-shrink-0 font-medium">{CURRENCY}{(item.price * item.quantity).toFixed(2)}</span>
+                      <span className="flex-shrink-0 font-medium">{formatPrice(item.price * item.quantity)}</span>
                     </div>
                   ))}
                   <div className="border-t border-gray-100 pt-3 space-y-2">
-                    <div className="flex justify-between text-sm text-gray-600"><span>{t('subtotal')}</span><span>{CURRENCY}{total.toFixed(2)}</span></div>
+                    <div className="flex justify-between text-sm text-gray-600"><span>{t('subtotal')}</span><span>{formatPrice(total)}</span></div>
                     <div className="flex justify-between text-sm text-gray-600"><span>{t('shippingCost')}</span><span className="text-gray-400 text-xs">{t('calculatedAtCheckout')}</span></div>
                   </div>
                   <div className="border-t border-gray-100 pt-3 flex justify-between items-baseline">
                     <span className="font-semibold text-gray-900">{t('total')}</span>
-                    <span className="text-xl font-bold" style={{ color: '#8B1538' }}>{CURRENCY}{total.toFixed(2)}</span>
+                    <span className="text-xl font-bold" style={{ color: '#8B1538' }}>{formatPrice(total)}</span>
                   </div>
 
                   {/* CTA */}

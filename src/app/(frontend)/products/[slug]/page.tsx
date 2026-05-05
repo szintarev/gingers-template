@@ -48,6 +48,11 @@ export default async function ProductPage({ params: paramsPromise, searchParams:
     return typeof img === 'object' && img !== null && 'url' in img ? (img.url ?? null) : null
   }).filter(Boolean) as string[]
 
+  const sizes = ((product as any).sizes ?? []).map((s: any) => ({
+    label: s.label as string,
+    price: s.price as number,
+  })).filter((s: any) => s.label && typeof s.price === 'number')
+
   return (
     <article>
       <SingleProductDetail
@@ -64,6 +69,7 @@ export default async function ProductPage({ params: paramsPromise, searchParams:
           label: n.label ?? '',
           value: n.value ?? '',
         }))}
+        sizes={sizes}
       />
     </article>
   )

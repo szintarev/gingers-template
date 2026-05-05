@@ -3,7 +3,14 @@
 import React from 'react'
 import Link from 'next/link'
 import { ShoppingCart, Star } from 'lucide-react'
-import { useCart } from '@/contexts/CartContext'
+import { toast } from 'sonner'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { formatPrice } from '@/lib/formatPrice'
+
+interface ProductSize {
+  label: string
+  price: number
+}
 
 interface ProductCardProps {
   id: number
@@ -13,23 +20,29 @@ interface ProductCardProps {
   imageUrl: string | null
   status: 'in-stock' | 'out-of-stock' | 'pre-order'
   slug: string
+  sizes?: ProductSize[]
 }
 
-export function ProductCard({ id, title, price, description, imageUrl, status, slug }: ProductCardProps) {
-  const { addToCart, openCart } = useCart()
+export function ProductCard({ id, title, price, description, imageUrl, status, slug, sizes = [] }: ProductCardProps) {
+  const { t } = useLanguage()
 
-  function handleAddToCart() {
-    addToCart({ id, name: title, price, image: imageUrl ?? '', category: slug })
-    openCart()
+  function handleAddToCart(e: React.MouseEvent) {
+    e.preventDefault()
+    toast.info(t('shopInDevelopment'), { description: t('shopInDevelopmentDesc') })
   }
 
   const badgeLabel = status === 'out-of-stock' ? 'Out of Stock' : status === 'pre-order' ? 'Pre-order' : null
+  const lowestPrice = sizes.length > 0 ? Math.min(...sizes.map((s) => s.price)) : null
+  const displayPrice = lowestPrice !== null ? lowestPrice : price
 
   return (
-    <div className="group bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col">
+    <div className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col">
+
+      {/* Full-card link overlay */}
+      <Link href={`/products/${slug}`} className="absolute inset-0 z-0" aria-label={title} />
 
       {/* Image area */}
-      <Link href={`/products/${slug}`} className="relative aspect-square overflow-hidden bg-gray-50 flex-shrink-0 block">
+      <div className="relative aspect-square overflow-hidden bg-gray-50 flex-shrink-0">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -44,25 +57,21 @@ export function ProductCard({ id, title, price, description, imageUrl, status, s
           </div>
         )}
 
-        {/* Status badge — top left */}
         {badgeLabel && (
           <span
-            className="absolute top-3 left-3 text-xs font-medium px-2.5 py-1 rounded-full text-white"
+            className="absolute top-3 left-3 text-xs font-medium px-2.5 py-1 rounded-full text-white z-10"
             style={{ backgroundColor: status === 'out-of-stock' ? '#6b7280' : '#8B1538' }}
           >
             {badgeLabel}
           </span>
         )}
-
-      </Link>
+      </div>
 
       {/* Info */}
       <div className="p-4 flex flex-col flex-1">
-        <Link href={`/products/${slug}`}>
-          <h3 className="font-semibold text-gray-900 text-sm leading-snug hover:text-[#8B1538] transition-colors">
-            {title}
-          </h3>
-        </Link>
+        <h3 className="font-semibold text-gray-900 text-sm leading-snug group-hover:text-[#8B1538] transition-colors">
+          {title}
+        </h3>
 
         {description && (
           <p className="text-gray-400 text-xs mt-1 leading-relaxed line-clamp-2 flex-1">
@@ -81,16 +90,19 @@ export function ProductCard({ id, title, price, description, imageUrl, status, s
         {/* Price + CTA */}
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
           <span className="font-bold text-base" style={{ color: '#8B1538' }}>
-            €{price.toFixed(2)}
+            {lowestPrice !== null && (
+              <span className="text-xs font-normal text-gray-400 mr-1">{t('from')}</span>
+            )}
+            {formatPrice(displayPrice)}
           </span>
           <button
             onClick={handleAddToCart}
             disabled={status === 'out-of-stock'}
-            className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-lg text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="relative z-10 flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-lg text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ backgroundColor: '#8B1538' }}
           >
             <ShoppingCart className="w-3.5 h-3.5" />
-            {status === 'out-of-stock' ? 'Unavailable' : 'Add to Cart'}
+            {status === 'out-of-stock' ? 'Unavailable' : t('addToCart')}
           </button>
         </div>
       </div>

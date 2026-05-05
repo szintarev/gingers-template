@@ -3,10 +3,17 @@
 import React, { useState } from 'react'
 import { ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useCart } from '@/contexts/CartContext'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { formatPrice } from '@/lib/formatPrice'
 
 interface NutritionFact {
   label: string
   value: string
+}
+
+interface ProductSize {
+  label: string
+  price: number
 }
 
 interface SingleProductDetailProps {
@@ -20,6 +27,7 @@ interface SingleProductDetailProps {
   features: string[]
   ingredients: string[]
   nutritionFacts: NutritionFact[]
+  sizes?: ProductSize[]
 }
 
 export function SingleProductDetail({
@@ -33,12 +41,23 @@ export function SingleProductDetail({
   features,
   ingredients,
   nutritionFacts,
+  sizes = [],
 }: SingleProductDetailProps) {
   const { addToCart, openCart } = useCart()
+  const { t } = useLanguage()
   const [activeImage, setActiveImage] = useState(0)
+  const [selectedSize, setSelectedSize] = useState<ProductSize | null>(sizes[0] ?? null)
+
+  const activePrice = selectedSize ? selectedSize.price : price
 
   function handleAddToCart() {
-    addToCart({ id, name: title, price, image: images[0] ?? '', category: slug })
+    addToCart({
+      id,
+      name: selectedSize ? `${title} — ${selectedSize.label}` : title,
+      price: activePrice,
+      image: images[0] ?? '',
+      category: slug,
+    })
     openCart()
   }
 
@@ -116,7 +135,7 @@ export function SingleProductDetail({
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900">{title}</h1>
               <p className="text-2xl font-bold mt-3" style={{ color: '#8B1538' }}>
-                €{price.toFixed(2)}
+                {formatPrice(activePrice)}
               </p>
             </div>
 
@@ -124,14 +143,46 @@ export function SingleProductDetail({
               <p className="text-gray-600 leading-relaxed">{description}</p>
             )}
 
+            {/* Size selector */}
+            {sizes.length > 0 && (
+              <div>
+                <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-3">
+                  {t('sizes')}
+                  {selectedSize && (
+                    <span className="ml-2 normal-case font-medium text-gray-700">{selectedSize.label}</span>
+                  )}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {sizes.map((size) => {
+                    const isSelected = selectedSize?.label === size.label
+                    return (
+                      <button
+                        key={size.label}
+                        onClick={() => setSelectedSize(size)}
+                        className="px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all"
+                        style={
+                          isSelected
+                            ? { borderColor: '#8B1538', backgroundColor: '#8B1538', color: '#fff' }
+                            : { borderColor: '#e5e7eb', backgroundColor: '#fff', color: '#374151' }
+                        }
+                      >
+                        {size.label}
+                        <span className="ml-1.5 opacity-75">{formatPrice(size.price)}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
             <button
               onClick={handleAddToCart}
-              disabled={status === 'out-of-stock'}
+              disabled={status === 'out-of-stock' || (sizes.length > 0 && !selectedSize)}
               className="flex items-center gap-2 px-6 py-3 rounded-xl text-white font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ backgroundColor: '#8B1538' }}
             >
               <ShoppingCart className="w-4 h-4" />
-              {status === 'out-of-stock' ? 'Out of Stock' : status === 'pre-order' ? 'Pre-order' : 'Add to Cart'}
+              {status === 'out-of-stock' ? 'Out of Stock' : status === 'pre-order' ? 'Pre-order' : t('addToCart')}
             </button>
 
             {/* Features */}
