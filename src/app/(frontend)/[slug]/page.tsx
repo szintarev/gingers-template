@@ -29,7 +29,7 @@ export async function generateStaticParams() {
 
   const params = pages.docs
     ?.filter((doc) => {
-      return doc.slug !== 'home'
+      return doc.slug !== 'home' && !isBlockedSlug(doc.slug)
     })
     .map(({ slug }) => {
       return { slug }
@@ -61,6 +61,9 @@ export default async function Page({ params: paramsPromise, searchParams: search
   const locale = resolveLocale(localeParam)
   // Decode to support slugs with special characters
   const decodedSlug = decodeURIComponent(slug)
+  if (isBlockedSlug(decodedSlug)) {
+    notFound()
+  }
   const url = '/' + decodedSlug
   const page: RequiredDataFromCollectionSlug<'pages'> | null = await queryPageBySlug({
     slug: decodedSlug,
@@ -107,6 +110,9 @@ export async function generateMetadata({ params: paramsPromise, searchParams: se
 }
 
 async function fetchPageBySlug(slug: string, draft: boolean, locale: Locale) {
+  if (isBlockedSlug(slug)) {
+    return null
+  }
   const payload = await getPayload({ config: configPromise })
 
   const result = await payload.find({
@@ -139,3 +145,9 @@ const queryPageBySlug = cache(async ({ slug, locale }: { slug: string; locale: L
 
   return getCachedPageBySlug(slug, locale)()
 })
+
+const blockedPageSlugs = new Set(['stickers', 'flyers', 'stickers-and-flyers', 'flyers-and-stickers'])
+
+function isBlockedSlug(slug: string | undefined | null) {
+  return typeof slug === 'string' && blockedPageSlugs.has(slug.toLowerCase())
+}

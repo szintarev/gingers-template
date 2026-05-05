@@ -33,7 +33,7 @@ const getPagesSitemap = unstable_cache(
 
     const sitemap = results.docs
       ? results.docs
-          .filter((page) => Boolean(page?.slug))
+          .filter((page) => Boolean(page?.slug) && !isBlockedSlug(page?.slug))
           .map((page) => ({
             loc: page?.slug === 'home' ? `${SITE_URL}/` : `${SITE_URL}/${page?.slug}`,
             lastmod: page.updatedAt || dateFallback,
@@ -48,6 +48,12 @@ const getPagesSitemap = unstable_cache(
     revalidate: 3600,
   },
 )
+
+const blockedPageSlugs = new Set(['stickers', 'flyers', 'stickers-and-flyers', 'flyers-and-stickers'])
+
+function isBlockedSlug(slug: string | undefined | null) {
+  return typeof slug === 'string' && blockedPageSlugs.has(slug.toLowerCase())
+}
 
 export async function GET() {
   const sitemap = await getPagesSitemap()
